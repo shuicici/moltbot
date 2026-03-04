@@ -61,7 +61,7 @@ import {
   resolveNonEnvSecretRefHeaderValueMarker,
   resolveEnvSecretRefHeaderValueMarker,
 } from "./model-auth-markers.js";
-import { createSubsystemLogger } from "../utils/logger.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
 import { resolveAwsSdkEnvVarName, resolveEnvApiKey } from "./model-auth.js";
 export { resolveOllamaApiBase } from "./models-config.providers.discovery.js";
 
@@ -433,12 +433,13 @@ export function normalizeProviders(params: {
 }
 
 type ImplicitProviderParams = {
-
   agentDir: string;
   config?: OpenClawConfig;
   env?: NodeJS.ProcessEnv;
   explicitProviders?: Record<string, ProviderConfig> | null;
 };
+
+
 
 type ProviderApiKeyResolver = (provider: string) => {
   apiKey: string | undefined;
