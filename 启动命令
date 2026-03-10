@@ -71,23 +71,12 @@ openclaw agents add "Agent 名称"
 非交互式
 openclaw agents add "My Agent" --workspace ./my-workspace --model gpt-4 --bind "telegram:123456" --non-interactive
 
-你也可以直接编辑配置文件（默认路径通常是 ~/.openclaw/openclaw.json）。
+# 1. 正常启动 (推荐)
+tmux new -s moltbot 'pm2 start "pnpm start" --name moltbot --exp-backoff-restart-delay 5000 --time && pm2 monit'
 
-在 agents.list 数组中添加一个新项：
-你也可以直接编辑配置文件（默认路径通常是 ~/.openclaw/openclaw.json）。
-{
-  "agents": {
-    "list": [
-      {
-        "id": "my-new-agent",
-        "name": "我的新 Agent",
-        "workspace": "/Users/yourname/.openclaw/agents/my-new-agent",
-        "model": "gpt-4"
-      }
-    ]
-  }
-}
-
+# 2. 调试模式 (开启原始 Payload 日志)
+# 只有在需要排查 AI 原始输入内容时才使用：
+# tmux new -s moltbot 'export OPENCLAW_ANTHROPIC_PAYLOAD_LOG=true && pm2 start "pnpm start" --name moltbot --exp-backoff-restart-delay 5000 --time && pm2 monit'
 每个 agent 都需要一个独立的 Workspace 目录。在新增 agent 后，该目录下通常需要包含以下文件：
 
 AGENTS.md：高层级说明和项目上下文。
