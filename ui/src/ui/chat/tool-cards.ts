@@ -61,7 +61,7 @@ export function buildToolSidebarContent(params: {
 
   const outputText = params.outputText?.trim();
   if (outputText) {
-    sections.push(`### Output\n${formatToolOutputForSidebar(params.outputText)}`);
+    sections.push(`### Output\n${formatToolOutputForSidebar(outputText)}`);
   } else {
     sections.push("*No output — tool completed successfully.*");
   }
