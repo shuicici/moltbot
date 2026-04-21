@@ -3,6 +3,7 @@ import { afterEach, beforeEach, expect, vi } from "vitest";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 import { clearRuntimeAuthProfileStoreSnapshots } from "../agents/auth-profiles.js";
 import { resetSkillsRefreshForTest } from "../agents/skills/refresh.js";
+import { NEW_STATE_DIRNAME } from "../config/paths.js";
 import { clearSessionStoreCacheForTest, loadSessionStore } from "../config/sessions.js";
 import { resetSystemEventsForTest } from "../infra/system-events.js";
 import {
@@ -60,8 +61,8 @@ export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise
     },
     {
       env: {
-        OPENCLAW_AGENT_DIR: (home) => path.join(home, ".openclaw", "agent"),
-        PI_CODING_AGENT_DIR: (home) => path.join(home, ".openclaw", "agent"),
+        OPENCLAW_AGENT_DIR: (home) => path.join(home, NEW_STATE_DIRNAME, "agent"),
+        PI_CODING_AGENT_DIR: (home) => path.join(home, NEW_STATE_DIRNAME, "agent"),
       },
       prefix: "openclaw-reply-",
     },

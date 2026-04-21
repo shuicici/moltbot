@@ -4,7 +4,12 @@ import path from "node:path";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import type { OpenClawConfig } from "../config/config.js";
-import { resolveOAuthDir, resolveStateDir } from "../config/paths.js";
+import {
+  NEW_STATE_DIRNAME,
+  resolveNewStateDir,
+  resolveOAuthDir,
+  resolveStateDir,
+} from "../config/paths.js";
 import {
   formatSessionArchiveTimestamp,
   isPrimarySessionTranscriptFileName,
@@ -134,7 +139,9 @@ function findOtherStateDirs(stateDir: string): string[] {
       if (entry.name.startsWith(".")) {
         continue;
       }
-      const candidates = [".openclaw"].map((dir) => path.resolve(root, entry.name, dir));
+      const candidates = [NEW_STATE_DIRNAME, ".openclaw"].map((dir) =>
+        path.resolve(root, entry.name, dir),
+      );
       for (const candidate of candidates) {
         if (candidate === resolvedState) {
           continue;
@@ -493,7 +500,7 @@ export async function noteStateIntegrity(
   const env = process.env;
   const homedir = () => resolveRequiredHomeDir(env, os.homedir);
   const stateDir = resolveStateDir(env, homedir);
-  const defaultStateDir = path.join(homedir(), ".openclaw");
+  const defaultStateDir = resolveNewStateDir(homedir);
   const oauthDir = resolveOAuthDir(env, stateDir);
   const agentId = resolveDefaultAgentId(cfg);
   const sessionsDir = resolveSessionTranscriptsDirForAgent(agentId, env, homedir);
@@ -515,8 +522,8 @@ export async function noteStateIntegrity(
       [
         `- State directory is under macOS cloud-synced storage (${displayStateDir}; ${cloudSyncedStateDir.storage}).`,
         "- This can cause slow I/O and sync/lock races for sessions and credentials.",
-        "- Prefer a local non-synced state dir (for example: ~/.openclaw).",
-        `  Set locally: OPENCLAW_STATE_DIR=~/.openclaw ${formatCliCommand("openclaw doctor")}`,
+        `- Prefer a local non-synced state dir (for example: ~/${NEW_STATE_DIRNAME}).`,
+        `  Set locally: OPENCLAW_STATE_DIR=~/${NEW_STATE_DIRNAME} ${formatCliCommand("openclaw doctor")}`,
       ].join("\n"),
     );
   }

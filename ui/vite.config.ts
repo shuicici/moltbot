@@ -24,6 +24,11 @@ export default defineConfig(() => {
   return {
     base,
     publicDir: path.resolve(here, "public"),
+    resolve: {
+      alias: {
+        "node:module": path.resolve(here, "src/node-module-shim.ts"),
+      },
+    },
     optimizeDeps: {
       include: ["lit/directives/repeat.js"],
     },

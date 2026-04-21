@@ -5,6 +5,7 @@ import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, expect, vi } from "vitest";
 import { WebSocket } from "ws";
 import { parseConfigJson5, resetConfigRuntimeState } from "../config/config.js";
+import { NEW_STATE_DIRNAME } from "../config/paths.js";
 import {
   clearSessionStoreCacheForTest,
   resolveMainSessionKeyFromConfig,
@@ -211,7 +212,7 @@ async function setupGatewayTestHome() {
   tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-home-"));
   process.env.HOME = tempHome;
   process.env.USERPROFILE = tempHome;
-  process.env.OPENCLAW_STATE_DIR = path.join(tempHome, ".openclaw");
+  process.env.OPENCLAW_STATE_DIR = path.join(tempHome, NEW_STATE_DIRNAME);
   delete process.env.OPENCLAW_CONFIG_PATH;
 }
 

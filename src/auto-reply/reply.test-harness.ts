@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, vi, type Mock } from "vitest";
+import { NEW_STATE_DIRNAME } from "../config/paths.js";
 
 type HomeEnvSnapshot = {
   HOME: string | undefined;
@@ -52,13 +53,15 @@ export function createTempHomeHarness(options: { prefix: string; beforeEachCase?
 
   async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     const home = path.join(fixtureRoot, `case-${++caseId}`);
-    await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+    await fs.mkdir(path.join(home, NEW_STATE_DIRNAME, "agents", "main", "sessions"), {
+      recursive: true,
+    });
     const envSnapshot = snapshotHomeEnv();
     process.env.HOME = home;
     process.env.USERPROFILE = home;
-    process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
-    process.env.OPENCLAW_AGENT_DIR = path.join(home, ".openclaw", "agent");
-    process.env.PI_CODING_AGENT_DIR = path.join(home, ".openclaw", "agent");
+    process.env.OPENCLAW_STATE_DIR = path.join(home, NEW_STATE_DIRNAME);
+    process.env.OPENCLAW_AGENT_DIR = path.join(home, NEW_STATE_DIRNAME, "agent");
+    process.env.PI_CODING_AGENT_DIR = path.join(home, NEW_STATE_DIRNAME, "agent");
 
     if (process.platform === "win32") {
       const match = home.match(/^([A-Za-z]:)(.*)$/);
